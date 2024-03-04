@@ -4,7 +4,7 @@ import json
 from src.interpretation.common import read_file_as_json, write_json_to_file
 
 DEVELOPMENT_ADMIN_BEARER = ''
-PRODUCTION_ADMIN_TOKEN = ''
+PRODUCTION_ADMIN_TOKEN = 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6Imt1bWVsYTAxMUBnbWFpbC5jb20iLCJVc2VySWQiOiI2IiwibmJmIjoxNjg0MjYxMzg0LCJleHAiOjE2ODY4NTMzODQsImlhdCI6MTY4NDI2MTM4NH0.Pxl7yogiT3ziYmo2QZcJynu3rIjT12QPOwjmlIKmzSrPuMOPF8_ckIjFXrxAiwh90pgijZVTim-0KD5L047fgQ'
 
 DEV_API_URL = 'http://localhost:5029'
 PRODUCTION_API_URL = 'https://api-literature.edublock.ge'
@@ -23,12 +23,14 @@ chapter_index_to_id = {
     33: 2366, 34: 2367, 35: 2368, 36: 2369, 37: 2370, 38: 2371, 39: 2372, 40: 2373,
     41: 2374, 42: 2375, 43: 2376, 44: 2377, 45: 2378, 46: 2379, 47: 2380, 48: 2381,
     49: 2382, 50: 2383, 51: 2384, 52: 2385, 53: 2386, 54: 2387, 55: 2388, 56: 2389,
-    57: 2390, 58: 2391, 59: 2392, 60: 2393, 61: 2394, 62: 2395, 63: 2396,
+    57: 2390, 58: 2391, 59: 2392, 60: 2393, 61: 2394, 62: 2395, 63: 2396, 64: 47,
 }
 
 
 def upload_chapter_with_elucidations():
     chapters = read_file_as_json('./normalized/ვეფხისტყაოსანი.json')
+
+    chapters.sort(key=lambda e: e['index'])
 
     for chapter in chapters:
         chapter_index = chapter["index"]
@@ -37,13 +39,13 @@ def upload_chapter_with_elucidations():
             print(f'skipping index {chapter_index}')
             continue
 
-        start_index = 8
-        end_index = 8
+        start_index = 64
+        end_index = 99999
 
         if chapter_index < start_index or chapter_index > (end_index):
             continue
 
-        print(f'updating index {chapter_index}, id = {chapter_index_to_id[chapter_index]}')
+        print(f'\n\nupdating index {chapter_index}, id = {chapter_index_to_id[chapter_index]}')
 
         body = {
             # 'title': chapter['title'],
@@ -52,7 +54,7 @@ def upload_chapter_with_elucidations():
             # 'creationId': creation_id
         }
 
-        # upsert_elucidations(chapter['elucidations'])
+        upsert_elucidations(chapter['elucidations'])
 
         for index, elucidation in enumerate(chapter['elucidations']):
             body[f'elucidations[{index}][termSearchQuery]'] = elucidation['term']

@@ -2,7 +2,14 @@
 
 import os
 
-loc = ""
+loc = "/Users/toko/dev/edu-block/literature_xii_dart_client/lib"
+
+# literature_xii_mobile_common
+# literature_xii_dart_client
+
+# 24496
+# 3063
+# 6617
 
 def count_lines(file_path):
 	with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:

@@ -36,16 +36,20 @@ def main():
     lines = []
     data = []
     definitions = []
-    i = 53
+    i = 47
 
-    current_url = "" # insert start url here
+    current_url = "http://www.nplg.gov.ge/saskolo/index.php?a=term&d=18&t=21030" # insert start url here
 
     while current_url:
         time.sleep(1)
         soup = get_soup(current_url)
-        # soup = get_file_soup('./47.html')
 
-        inline_list_rows = soup.find('div', {'class': 'defnblock'}).find_all('dt')
+        nested_inline_list_rows = map(
+            lambda li: li.find('div', {'class': 'gwusg'}).find_all('dt'),
+            soup.find('ol', {'class': 'defnblock'}).find_all('li')
+        )
+
+        inline_list_rows = [item for sublist in nested_inline_list_rows for item in sublist]
 
         print(f'\n\nscraping page title number {i} url = {current_url}')
 
@@ -66,7 +70,7 @@ def main():
             sanitized_line_text = re.sub('\\(.+\\) ', '', text.replace('იხ. ტაეპის განმარტებანი', ''))
 
             current_scraped_text = '\n\n'.join(list(map(lambda e: e['text'], data))) \
-                                   + ('\n\n' if data else '') \
+                                   + ('\n\n' if data  else'') \
                                    + "\n".join(lines) \
                                    + ('\n' if lines else '')
 
@@ -89,7 +93,8 @@ def main():
 
                 scraped_definitions = scrape_definitions(definition_url)
 
-                should_trim_anchor_text = False # for edge cases
+
+                should_trim_anchor_text = sanitized_line_text== 'ზედა დავსვი ტახტსა ჩემსა, შევეკვეთე, გავესულე.'# for edge cases
                 elucidation_start_index = sanitized_line_text.index(
                     definition_anchor.text.lstrip() if should_trim_anchor_text else definition_anchor.text
                 )
@@ -154,5 +159,5 @@ def normalize(write=False):
         write_json_to_file(f'../normalized/ვეფხისტყაოსანი.json', all_blocks)
 
 
-main()
-# normalize(write=True)
+# main()
+normalize(write=True)

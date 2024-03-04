@@ -40,8 +40,8 @@ def unzipFiles(path):
         os.chdir("..")
 
 if __name__=="__main__":
-    location = ""
-    deleteFiles(path=location, delete=True, extensions=['.html', '.zip', '.txt'])
+    location = "/Users/toko/Downloads/Algorithms and Data Structures 2"
+    deleteFiles(path=location, delete=True, extensions=['.js'])
 
 
 
