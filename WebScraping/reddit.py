@@ -8,6 +8,8 @@ from httpx import AsyncClient, Response
 from parsel import Selector
 from loguru import logger as log
 
+# https://scrapfly.io/blog/how-to-scrape-reddit-social-data/
+
 def get_soup(url):
     response = None
     try:
